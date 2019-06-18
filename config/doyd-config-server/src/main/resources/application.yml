@@ -1,0 +1,40 @@
+server:
+  port: 8888
+spring:
+  application:
+    name:
+  profiles:
+    active: default,dev
+  cloud:
+    config:
+      server:
+        prefix: /appconfig
+        dev:
+          search-locations: file:${qianpen.yml.repo-dir}/{application}
+          add-label-locations: false
+management:
+  # 修改spring boot actuator的端口和路径来提高攻击成本, 一定程度上提高安全性
+  port: 50868
+  context-path: '/86120d49-edb6-4a6a-ae93-f4ac7b12a1e8'
+  security:
+    enabled: false
+eureka:
+  instance:
+    prefer-ip-address: true
+    # ip-address: 127.0.0.1
+    ip-address: 192.168.1.3
+    metadata-map:
+      management:
+        port: ${management.port}
+        context-path: ${management.context-path}
+  client:
+    # 客户端从Eureka Server集群里更新Eureka Server信息的频率
+    eureka-service-url-poll-interval-seconds: 60
+    # 定义从注册中心获取注册服务的信息
+    registry-fetch-interval-seconds: 15
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+doyd:
+  yml:
+    repo-dir: ./config-repo
+    backup-dir: ./config-backup
