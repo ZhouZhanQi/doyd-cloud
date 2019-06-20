@@ -1,15 +1,8 @@
-package com.doyd.config.helper;
+package com.doyd.configserver.helper;
 
-import com.doyd.config.vo.AppInfoVo;
+import com.doyd.configserver.vo.AppInfoVo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.client.utils.HttpClientUtils;
 import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
-import java.util.Map;
 
 /**
  * Spring Boot Actuactor暴露的接口有可能被应用更改,

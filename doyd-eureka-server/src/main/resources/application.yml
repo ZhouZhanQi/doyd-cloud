@@ -17,6 +17,9 @@ management:
     endpoint:
       health:
         show-details: ALWAYS
+  endpoint:
+    logfile:
+      external-file: /doyd-cloud/logs/doyd-eureka-server.log
 eureka:
   instance:
     prefer-ip-address: false
@@ -49,3 +52,5 @@ eureka:
     fetchRegistry: false
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+logging:
+  file: doyd-eureka-server

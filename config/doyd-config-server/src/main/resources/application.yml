@@ -2,7 +2,7 @@ server:
   port: 8888
 spring:
   application:
-    name: doyd-config-server
+    name: doyd-configserver-server
   profiles:
     active: default,native
   cloud:
@@ -25,6 +25,9 @@ management:
     endpoint:
       health:
         show-details: ALWAYS
+  endpoint:
+    logfile:
+      external-file: /doyd-cloud/logs/doyd-config-server.log
 eureka:
   instance:
     prefer-ip-address: true
@@ -45,5 +48,7 @@ eureka:
       defaultZone: http://127.0.0.1:8761/eureka/
 doyd:
   yml:
-    repo-dir: ./config-repo
-    backup-dir: ./config-backup
+    repo-dir: ./configserver-repo
+    backup-dir: ./configserver-backup
+logging:
+  file: doyd-config-server

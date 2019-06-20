@@ -21,6 +21,9 @@ management:
     endpoint:
       health:
         show-details: ALWAYS
+  endpoint:
+    logfile:
+      external-file: /doyd-cloud/logs/doyd-boot-admin.log
 eureka:
   instance:
     prefer-ip-address: true
@@ -36,3 +39,5 @@ eureka:
     registry-fetch-interval-seconds: 15
     serviceUrl:
       defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761}/eureka/
+logging:
+  file: doyd-boot-admin

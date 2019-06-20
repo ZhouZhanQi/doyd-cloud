@@ -1,4 +1,4 @@
-package com.doyd.config;
+package com.doyd.configserver;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

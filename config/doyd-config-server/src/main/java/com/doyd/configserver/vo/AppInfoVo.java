@@ -1,4 +1,4 @@
-package com.doyd.config.vo;
+package com.doyd.configserver.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
