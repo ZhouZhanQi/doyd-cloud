@@ -20,7 +20,7 @@ management:
 eureka:
   instance:
     prefer-ip-address: false
-    ip-address: 192.168.4.110
+    ip-address: 192.168.1.3
 #    ip-address: 127.0.0.1
     hostname: localhost
     # 心跳间隔
@@ -28,10 +28,11 @@ eureka:
     # 服务失效时间： 如果多久没有收到请求，则可以删除服务
     lease-expiration-duration-in-seconds: 15
     instance-id: ${eureka.instance.ip-address}:${server.port}
+    health-check-url-path: /actuator/health
     metadata-map:
       management:
         port: ${management.server.port}
-        context-path: ${management.server.servlet.context-path}
+        context-path: ${management.server.servlet.context-path}/actuator
   server:
     # 关闭自我保护模式
     enable-self-preservation: false

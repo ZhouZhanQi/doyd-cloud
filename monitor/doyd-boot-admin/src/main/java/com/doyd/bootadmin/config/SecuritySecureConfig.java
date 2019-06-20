@@ -31,6 +31,7 @@ public class SecuritySecureConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(adminContextPath + "/assets/**").permitAll()
                 .antMatchers(adminContextPath + "/login").permitAll()
+                .antMatchers(adminContextPath + "/actuator/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage(adminContextPath + "/login").successHandler(successHandler).and()
@@ -39,8 +40,7 @@ public class SecuritySecureConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .ignoringAntMatchers(
-                        adminContextPath + "/instances",
-                        adminContextPath + "/actuator/**"
+                        adminContextPath + "/instances"
                 );
     }
 }

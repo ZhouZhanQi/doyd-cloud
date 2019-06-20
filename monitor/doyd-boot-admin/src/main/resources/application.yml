@@ -9,19 +9,6 @@ spring:
     user:
       name: zhouzq
       password: 825116
-  boot:
-    admin:
-      client:
-        url: http://localhost:7020
-        username: zhouzq
-        password: 825116
-        instance:
-          prefer-ip: true
-          metadata:
-            user.name: ${spring.security.user.name}
-            user.password: ${spring.security.user.password}
-      ui:
-        title: 潮生活
 management:
   server:
     port: 50020
@@ -36,19 +23,16 @@ management:
         show-details: ALWAYS
 eureka:
   instance:
-    hostname: localhost
     prefer-ip-address: true
-    ip-address: 192.168.4.110
-    lease-renewal-interval-in-seconds: 10
+    ip-address: 192.168.1.3
+#    ip-address: 192.168.4.110
     instance-id: ${eureka.instance.ip-address}:${server.port}
-    health-check-url-path: /actuator/health
     metadata-map:
-      user.name: ${spring.security.user.name}
-      user.password: ${spring.security.user.password}
+      management:
+        port: ${management.server.port}
+        context-path: ${management.server.servlet.context-path}/actuator
   client:
-    # 客户端从Eureka Server集群里更新Eureka Server信息的频率
     eureka-service-url-poll-interval-seconds: 60
-    # 定义从注册中心获取注册服务的信息
     registry-fetch-interval-seconds: 15
-    service-url:
-      defaultZone: ${EUREKA_SERVICE_URL:http://192.168.4.110:8761/eureka/}
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761}/eureka/
