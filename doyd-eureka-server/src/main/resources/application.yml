@@ -10,6 +10,13 @@ management:
     servlet:
       context-path: '/0f8e8c27-e5a6-4d31-96f1-ace88c3cd83b'
     port: 50761
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    endpoint:
+      health:
+        show-details: ALWAYS
 eureka:
   instance:
     prefer-ip-address: false

@@ -46,8 +46,9 @@ eureka:
       user.name: ${spring.security.user.name}
       user.password: ${spring.security.user.password}
   client:
-    registry-fetch-interval-seconds: 5
-    registerWithEureka: true
-    fetchRegistry: true
+    # 客户端从Eureka Server集群里更新Eureka Server信息的频率
+    eureka-service-url-poll-interval-seconds: 60
+    # 定义从注册中心获取注册服务的信息
+    registry-fetch-interval-seconds: 15
     service-url:
-      defaultZone: http://127.0.0.1:8761/eureka/
+      defaultZone: ${EUREKA_SERVICE_URL:http://192.168.4.110:8761/eureka/}

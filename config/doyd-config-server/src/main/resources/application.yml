@@ -2,14 +2,14 @@ server:
   port: 8888
 spring:
   application:
-    name:
+    name: doyd-config-server
   profiles:
-    active: default
+    active: default,native
   cloud:
     config:
       server:
         prefix: /appconfig
-        dev:
+        native:
           search-locations: file:${doyd.yml.repo-dir}/{application}
           add-label-locations: false
 management:
@@ -21,8 +21,9 @@ management:
 eureka:
   instance:
     prefer-ip-address: true
-    ip-address: 127.0.0.1
-#    ip-address: 192.168.1.3
+#    ip-address: 127.0.0.1
+    ip-address: 192.168.4.110
+    instance-id: ${eureka.instance.ip-address}:${server.port}
     metadata-map:
       management:
         port: ${management.server.port}
