@@ -13,7 +13,7 @@ spring:
           search-locations: file:${qianpen.yml.repo-dir}/{application}
           add-label-locations: false
 management:
-  # ĞŞ¸Äspring boot actuatorµÄ¶Ë¿ÚºÍÂ·¾¶À´Ìá¸ß¹¥»÷³É±¾, Ò»¶¨³Ì¶ÈÉÏÌá¸ß°²È«ĞÔ
+  # ä¿®æ”¹spring boot actuatorçš„ç«¯å£å’Œè·¯å¾„æ¥æé«˜æ”»å‡»æˆæœ¬, ä¸€å®šç¨‹åº¦ä¸Šæé«˜å®‰å…¨æ€§
   port: 50868
   context-path: '/86120d49-edb6-4a6a-ae93-f4ac7b12a1e8'
   security:
@@ -28,9 +28,9 @@ eureka:
         port: ${management.port}
         context-path: ${management.context-path}
   client:
-    # ¿Í»§¶Ë´ÓEureka Server¼¯ÈºÀï¸üĞÂEureka ServerĞÅÏ¢µÄÆµÂÊ
+    # å®¢æˆ·ç«¯ä»Eureka Serveré›†ç¾¤é‡Œæ›´æ–°Eureka Serverä¿¡æ¯çš„é¢‘ç‡
     eureka-service-url-poll-interval-seconds: 60
-    # ¶¨Òå´Ó×¢²áÖĞĞÄ»ñÈ¡×¢²á·şÎñµÄĞÅÏ¢
+    # å®šä¹‰ä»æ³¨å†Œä¸­å¿ƒè·å–æ³¨å†ŒæœåŠ¡çš„ä¿¡æ¯
     registry-fetch-interval-seconds: 15
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka/

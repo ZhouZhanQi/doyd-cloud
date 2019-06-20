@@ -48,25 +48,25 @@ public class AppInstanceHelper {
      * @return
      */
     public static void fetchAppInfo(AppInfoVo appInfoVo, ServiceInstance instance) {
-        String instanceUrl = instance.getUri().toString();
-        // 尝试通过management相关接口获取应用信息
-        URI uri = UriComponentsBuilder.fromHttpUrl(getManagementUrl(instance).toString()).pathSegment("info").build().toUri();
-        try {
-            Map<String, String> headers = new HashMap<>(1);
-            headers.put(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-
-            String infoResp = HttpClientUtils.doGet(uri.toString(), null, headers, 3000);
-            Map<String, Object> info = JacksonUtils.json2map(infoResp);
-            if (info.containsKey(KEY_VERSION) && info.get(KEY_VERSION) != null) {
-                appInfoVo.setVersion(info.get(KEY_VERSION).toString());
-            }
-            if (info.containsKey(KEY_DESCRIPTION) && info.get(KEY_DESCRIPTION) != null) {
-                appInfoVo.setDescription(info.get(KEY_DESCRIPTION).toString());
-            }
-            appInfoVo.setInitialized(true);
-        } catch (Exception e) {
-            log.warn(">> 获取应用信息失败, app={}, uri={}, infoUrl={}", instance.getServiceId(), instanceUrl, uri.toString());
-        }
+//        String instanceUrl = instance.getUri().toString();
+//        // 尝试通过management相关接口获取应用信息
+//        URI uri = UriComponentsBuilder.fromHttpUrl(getManagementUrl(instance).toString()).pathSegment("info").build().toUri();
+//        try {
+//            Map<String, String> headers = new HashMap<>(1);
+//            headers.put(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+//
+//            String infoResp = HttpClientUtils.doGet(uri.toString(), null, headers, 3000);
+//            Map<String, Object> info = JacksonUtils.json2map(infoResp);
+//            if (info.containsKey(KEY_VERSION) && info.get(KEY_VERSION) != null) {
+//                appInfoVo.setVersion(info.get(KEY_VERSION).toString());
+//            }
+//            if (info.containsKey(KEY_DESCRIPTION) && info.get(KEY_DESCRIPTION) != null) {
+//                appInfoVo.setDescription(info.get(KEY_DESCRIPTION).toString());
+//            }
+//            appInfoVo.setInitialized(true);
+//        } catch (Exception e) {
+//            log.warn(">> 获取应用信息失败, app={}, uri={}, infoUrl={}", instance.getServiceId(), instanceUrl, uri.toString());
+//        }
     }
 
 
