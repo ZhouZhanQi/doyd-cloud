@@ -1,17 +1,17 @@
-package com.doyd.config;
+package com.doyd.bootadmin;
 
+import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.config.server.EnableConfigServer;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @EnableEurekaClient
-@EnableConfigServer
+@EnableAdminServer
 @SpringBootApplication
-public class DoydConfigServerApplication {
+public class DoydBootAdminApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DoydConfigServerApplication.class, args);
+        SpringApplication.run(DoydBootAdminApplication.class, args);
     }
 
 }

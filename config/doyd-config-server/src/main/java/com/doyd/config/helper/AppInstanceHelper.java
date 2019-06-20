@@ -1,6 +1,7 @@
 package com.doyd.config.helper;
 
 import com.doyd.config.vo.AppInfoVo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +18,7 @@ import java.util.Map;
  * @author zhouzq
  * @date 2019-06-19
  */
+@Slf4j
 public class AppInstanceHelper {
 
     private static final String KEY_MANAGEMENT_PORT = "management.port";

@@ -1,0 +1,53 @@
+info:
+  description: 微服务健康和日志监控
+server:
+  port: 7020
+spring:
+  application:
+    name: doyd-bootadmin
+  security:
+    user:
+      name: zhouzq
+      password: 825116
+  boot:
+    admin:
+      client:
+        url: http://localhost:7020
+        username: zhouzq
+        password: 825116
+        instance:
+          prefer-ip: true
+          metadata:
+            user.name: ${spring.security.user.name}
+            user.password: ${spring.security.user.password}
+      ui:
+        title: 潮生活
+management:
+  server:
+    port: 50020
+    servlet:
+      context-path: '/c6de42bb-6078-447e-826c-773d6fd7d2da'
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    endpoint:
+      health:
+        show-details: ALWAYS
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    ip-address: 192.168.4.110
+    lease-renewal-interval-in-seconds: 10
+    instance-id: ${eureka.instance.ip-address}:${server.port}
+    health-check-url-path: /actuator/health
+    metadata-map:
+      user.name: ${spring.security.user.name}
+      user.password: ${spring.security.user.password}
+  client:
+    registry-fetch-interval-seconds: 5
+    registerWithEureka: true
+    fetchRegistry: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/

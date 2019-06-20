@@ -1,10 +1,43 @@
+info:
+  description: 服务注册和发现中心
+spring:
+  application:
+    name: doyd-eureka-server
 server:
   port: 8761
+management:
+  server:
+    servlet:
+      context-path: '/0f8e8c27-e5a6-4d31-96f1-ace88c3cd83b'
+    port: 50761
 eureka:
   instance:
+    prefer-ip-address: false
+    ip-address: 192.168.4.110
+#    ip-address: 127.0.0.1
     hostname: localhost
+    # 心跳间隔
+    lease-renewal-interval-in-seconds: 5
+    # 服务失效时间： 如果多久没有收到请求，则可以删除服务
+    lease-expiration-duration-in-seconds: 15
+    instance-id: ${eureka.instance.ip-address}:${server.port}
+    metadata-map:
+      management:
+        port: ${management.server.port}
+        context-path: ${management.server.servlet.context-path}
+  server:
+    # 关闭自我保护模式
+    enable-self-preservation: false
+    # Eureka Server 自我保护系数，当enable-self-preservation=true时，启作用
+    # renewal-percent-threshold: 0.1
+    # 设置清理间隔,单位为毫秒,默认为0
+    eviction-interval-timer-in-ms: 5000
+    # 设置如果Eureka Server启动时无法从临近Eureka Server节点获取注册信息，它多久不对外提供注册服务
+    # wait-time-in-ms-when-sync-empty: 6000000
+    # 集群之间相互更新节点信息的时间频率
+    # peer-eureka-nodes-update-interval-ms: 60000
   client:
-    registerWithEureka: false
+    registerWithEureka: true
     fetchRegistry: false
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
