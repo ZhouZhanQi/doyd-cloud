@@ -4,7 +4,7 @@ server:
   port: 7020
 spring:
   application:
-    name: doyd-bootadmin
+    name: doyd-boot-admin
   security:
     user:
       name: zhouzq
@@ -27,8 +27,8 @@ management:
 eureka:
   instance:
     prefer-ip-address: true
-    ip-address: 192.168.1.3
-#    ip-address: 192.168.4.110
+#    ip-address: 192.168.1.3
+    ip-address: 192.168.4.110
     instance-id: ${eureka.instance.ip-address}:${server.port}
     metadata-map:
       management:
@@ -38,6 +38,6 @@ eureka:
     eureka-service-url-poll-interval-seconds: 60
     registry-fetch-interval-seconds: 15
     serviceUrl:
-      defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761}/eureka/
+      defaultZone: ${EUREKA_SERVICE_URL:http://127.0.0.1:8761}/eureka/
 logging:
   file: doyd-boot-admin

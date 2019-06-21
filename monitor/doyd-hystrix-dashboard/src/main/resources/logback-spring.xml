@@ -5,12 +5,12 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <property name="default_log_path" value="/doyd-cloud/logs" />
     <property name="LOG_PATH" value="${LOG_PATH:-${default_log_path}}"/>
-    <property name="LOG_FILE" value="${LOG_FILE:-doyd-boot-admin}"/>
+    <property name="LOG_FILE" value="${LOG_FILE:-doyd-hystrix-dashboard}"/>
 
     <!-- the name of the application's logging context -->
     <!-- by default each JMXConfigurator instance will be registered under the same name in the same JVM -->
     <!-- we need to set the contextName for different apps, so that the jmxconfigurator won't collide -->
-    <contextName>doyd-config-server</contextName>
+    <contextName>doyd-hystrix-dashboard</contextName>
     <jmxConfigurator/>
 
     <springProfile name="default,dev">

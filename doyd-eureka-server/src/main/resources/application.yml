@@ -23,8 +23,8 @@ management:
 eureka:
   instance:
     prefer-ip-address: false
-    ip-address: 192.168.1.3
-#    ip-address: 127.0.0.1
+#    ip-address: 192.168.1.3
+    ip-address: 192.168.4.110
     hostname: localhost
     # 心跳间隔
     lease-renewal-interval-in-seconds: 5
