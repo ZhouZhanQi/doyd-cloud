@@ -12,9 +12,12 @@
     <modules>
         <module>doyd-eureka-server</module>
         <module>config/doyd-config-server</module>
+
         <module>monitor/doyd-boot-admin</module>
         <module>monitor/doyd-hystrix-dashboard</module>
         <module>monitor/doyd-zipkin-server</module>
+
+        <module>tcc/doyd-tcc-coordinator</module>
     </modules>
 
     <properties>

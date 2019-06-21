@@ -1,5 +1,5 @@
 server:
-  port: 8888
+  port: 8768
 spring:
   application:
     name: doyd-configserver-server
