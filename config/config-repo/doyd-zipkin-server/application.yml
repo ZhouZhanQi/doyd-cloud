@@ -1,15 +1,17 @@
 zipkin:
   storage:
     mysql:
-      db: zipkin
       host: 39.100.105.67
       port: 3306
-      use-ssl: false
       username: root
-      password: 19931121@Zzq
+      password: 825116
+      db: zipkin
       max-active: 5
+      character-encoding: utf8
+      use-ssl: false
   collector:
     rabbitmq:
+      queue: zipkin
       addresses: 39.100.105.67:5672
-      password: zhouzq
-      username: 825116
+      password: guest
+      username: guest

@@ -1,10 +1,10 @@
 info:
-  description: 调用链跟踪
+  description: Hystrix熔断监控
 server:
-  port: 9411
+  port: 7030
 spring:
   application:
-    name: doyd-zipkin-server
+    name: doyd-hystrix-dashboard
   cloud:
     config:
       discovery:
@@ -14,15 +14,11 @@ spring:
       retry:
         enabled: false
 management:
-  metrics:
-    web:
-      server:
-        auto-time-requests: false
   # 修改spring boot actuator的端口和路径来提高攻击成本, 一定程度上提高安全性
   server:
-    port: 50411
+    port: 50030
     servlet:
-      context-path: '/3287ed7d-5b03-4924-b8d4-5a4f361d1852'
+      context-path: '/6ebf0630-463f-4ee8-beb0-b861ae849fe9'
   endpoints:
     web:
       exposure:
@@ -32,7 +28,15 @@ management:
         show-details: ALWAYS
   endpoint:
     logfile:
-      external-file: /doyd-cloud/logs/doyd-zipkin-server.log
+      external-file: /doyd-cloud/logs/doyd-hystrix-dashboard.log
+turbine:
+  app-config: doyd-configserver-server
+  aggregator:
+    cluster-config: DOYD-CONFIGSERVER-SERVER
+  cluster-name-expression: metadata['turbine-cluster']
+  combine-host-port: true
+  instanceUrlSuffix:
+    DOYD-CONFIGSERVER-SERVER: '/86120d49-edb6-4a6a-ae93-f4ac7b12a1e8/hystrix.stream'
 eureka:
   instance:
     prefer-ip-address: true
@@ -52,4 +56,4 @@ eureka:
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka/
 logging:
-  file: doyd-zipkin-server
+  file: doyd-hystrix-dashboard

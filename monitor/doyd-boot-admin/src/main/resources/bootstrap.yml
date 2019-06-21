@@ -5,6 +5,14 @@ server:
 spring:
   application:
     name: doyd-boot-admin
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: doyd-configserver-server
+    loadbalancer:
+      retry:
+        enabled: false
   security:
     user:
       name: zhouzq

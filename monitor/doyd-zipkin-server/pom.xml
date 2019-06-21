@@ -56,7 +56,6 @@
             <version>${zipkin.version}</version>
         </dependency>
 
-
         <!-- https://mvnrepository.com/artifact/io.zipkin.java/zipkin-autoconfigure-collector-rabbitmq -->
         <dependency>
             <groupId>io.zipkin.java</groupId>
