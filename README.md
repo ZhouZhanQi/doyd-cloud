@@ -13,7 +13,7 @@ DoydCloud
     |   |-- doyd-hystrix-dashboard: 熔断器的监控面板
     |   |-- doyd-zipkin-server: 调用链跟踪
     |   |-- doyd-boot-admin: 微服务健康监控(升级到2.1.4之后删除hystrix ui turbine ui)
-    |-- tcc: 待开发
+    |-- tcc: 待开发 （柔性事务）https://github.com/prontera/spring-cloud-rest-tcc
     |-- scripts: 项目所用到的各种脚本(数据库sql脚本等)
 
 ## 构建和运行
