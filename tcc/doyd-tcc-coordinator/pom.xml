@@ -17,9 +17,28 @@
     <description>tcc协调器</description>
 
     <dependencies>
+
+
+        <dependency>
+            <groupId>com.doyd</groupId>
+            <artifactId>common-core</artifactId>
+            <version>${doyd-common.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.doyd</groupId>
+            <artifactId>common-dps</artifactId>
+            <version>${doyd-common.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <dependency>
@@ -30,11 +49,6 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-sleuth</artifactId>
         </dependency>
 
         <dependency>

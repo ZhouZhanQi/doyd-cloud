@@ -5,6 +5,10 @@ spring:
     name: doyd-tcc-coordinator
   zipkin:
     base-url: http://doyd-zipkin-server/zipkin
+    zipkin:
+      rabbitmq:
+        queue: zipkin
+      message-timeout: 3
   sleuth:
     sampler:
       probability: 1.0
