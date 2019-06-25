@@ -17,9 +17,11 @@
         <module>monitor/doyd-hystrix-dashboard</module>
         <module>monitor/doyd-zipkin-server</module>
         <module>tcc/doyd-tcc-coordinator</module>
+        <module>tcc/doyd-event-driven</module>
         <module>doyd-common/common-core</module>
         <module>doyd-common/common-dps</module>
         <module>doyd-common/common-db</module>
+        <module>gateway/doyd-admin-gateway</module>
     </modules>
 
     <properties>
