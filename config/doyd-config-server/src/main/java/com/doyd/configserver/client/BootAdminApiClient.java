@@ -1,5 +1,6 @@
 package com.doyd.configserver.client;
 
+import com.doyd.configserver.config.FeginClientConfig;
 import com.doyd.configserver.vo.bootadmin.BootAdminAppVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +12,7 @@ import java.util.List;
  * @date 2019/7/2
  * @desc bootadmin 调用接口
  */
-@FeignClient(name = "doyd-boot-admin")
+@FeignClient(name = "doyd-boot-admin", configuration = FeginClientConfig.class)
 public interface BootAdminApiClient {
 
     /**
