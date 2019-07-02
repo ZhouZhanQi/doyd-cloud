@@ -1,0 +1,145 @@
+info:
+  description: 定时任务微服务
+server:
+  port: 7040
+spring:
+  application:
+    name: doyd-scheduled-task
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: doyd-configserver-server
+    loadbalancer:
+      retry:
+        enabled: false
+  security:
+    user:
+      name: zhouzq
+      password: 825116
+  quartz:
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: clusteredScheduler
+            instanceId: AUTO
+            jobStore:
+              class: org.quartz.impl.jdbcjobstore.JobStoreTX
+              driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+              tablePrefix: QRTZ_
+              isClustered: true
+              clusterCheckinInterval: 10000
+              useProperties: false
+            threadPool:
+              class: org.quartz.simpl.SimpleThreadPool
+              threadCount: 10
+              threadPriority: 5
+              threadsInheritContextClassLoaderOfInitializingThread: true
+              #数据库方式
+    job-store-type: jdbc
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://39.100.105.67:3306/quartz?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: 825116
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      max-lifetime: 1800000
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: DatebookHikariCP
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+management:
+  server:
+    port: 50620
+    servlet:
+      context-path: '/a01c5817-35c1-44ff-9876-d75d3becf908'
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    endpoint:
+      health:
+        show-details: ALWAYS
+  endpoint:
+    logfile:
+      external-file: /doyd-cloud/logs/doyd-scheduled-task.log
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml,classpath*:mapper/*/*.xml
+  type-aliases-package: com.doyd.*,com.doyd.*.entity
+  typeEnumsPackage: com.doyd.*.entity.enums
+  configuration:
+    #数据库 下划线命名方式 a_column 转为 java的 驼峰式命名方式aColumn
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+    # defaultEnumTypeHandler 枚举将统一使用指定处理器进行处理
+    # 值说明：
+    # org.apache.ibatis.type.EnumTypeHandler : 默认值， 存储枚举的名称
+    # org.apache.ibatis.type.EnumOrdinalTypeHandler : 存储枚举的索引
+    # com.baomidou.mybatisplus.extension.handlers.EnumTypeHandler : 枚举类需要实现IEnum接口或字段标记@EnumValue注解.
+    defaultEnumTypeHandler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+  global-config:
+    db-config:
+      #是否开启大写命名，默认不开启
+      capital-mode: false
+
+      # 逻辑删除，在实体类相应的删除状态字段加上@TableLogic注解即可
+      # 逻辑已删除值(默认为 1)
+      #logic-delete-value: 1
+      # 逻辑未删除值(默认为 0)
+      #logic-not-delete-value: 0
+
+      #主键类型  0:"数据库ID自增", 1:"无主键", 2:"用户输入ID",3:"全局唯一ID (数字类型唯一ID)", 4:"全局唯一ID UUID", 5:"全局唯一ID (字符串类型唯一ID)"
+      #AUTO(0),
+      #NONE(1),
+      #INPUT(2),
+      #ID_WORKER(3),
+      #UUID(4),
+      #ID_WORKER_STR(5);
+      id-type: AUTO
+      #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+      #IGNORED,
+      #NOT_NULL,
+      #NOT_EMPTY,
+      #DEFAULT;
+      field-strategy: NOT_NULL
+eureka:
+  instance:
+    prefer-ip-address: true
+    #    ip-address: 127.0.0.1
+    ip-address: 192.168.4.110
+    #    ip-address: 192.168.1.3
+    instance-id: ${eureka.instance.ip-address}:${server.port}
+    metadata-map:
+      management:
+        port: ${management.server.port}
+        context-path: ${management.server.servlet.context-path}/actuator
+  client:
+    # 客户端从Eureka Server集群里更新Eureka Server信息的频率
+    eureka-service-url-poll-interval-seconds: 60
+    # 定义从注册中心获取注册服务的信息
+    registry-fetch-interval-seconds: 15
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+# Hystrix默认的超时时间是1秒，如果超过这个时间未响应，将会进入fallback代码
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 300000
+# 断路器的超时时间需要大于ribbon的超时时间(readtimeout + connectimeout总和)，不然不会触发重试
+# 若ribbon超时时间总和大于hystrix超时, 会出现警告日志:
+# The Hystrix timeout of XXXms for the command adminsso-ms is set lower than the combination of the Ribbon read and connect timeout, XXXms.
+# 警告信息中的ribbon超时总和计算公式为：
+#     total = (read-timeout + connect-timeout) * ((max-auto-retries + 1) + max-auto-retries-next-server)
+logging:
+  file: doyd-scheduled-task
+
