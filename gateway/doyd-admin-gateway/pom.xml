@@ -14,7 +14,7 @@
     <artifactId>doyd-admin-gateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>doyd-admin-gateway</name>
-    <description>Demo project for Spring Boot</description>
+    <description>后台网关</description>
 
 
     <dependencies>
@@ -27,6 +27,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-undertow</artifactId>
         </dependency>
     </dependencies>
 

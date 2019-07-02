@@ -11,6 +11,8 @@
 
     <modules>
         <module>doyd-eureka-server</module>
+        <module>doyd-scheduled-task</module>
+
         <module>config/doyd-config-server</module>
 
         <module>monitor/doyd-boot-admin</module>

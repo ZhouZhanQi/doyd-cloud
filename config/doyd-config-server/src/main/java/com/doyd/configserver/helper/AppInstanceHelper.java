@@ -1,8 +1,19 @@
 package com.doyd.configserver.helper;
 
 import com.doyd.configserver.vo.AppInfoVo;
+import com.doyd.core.util.JacksonUtils;
+import com.doyd.core.util.http.HttpClientUtils;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpHeaders;
 import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.http.MediaType;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
+import java.util.Map;
 
 /**
  * Spring Boot Actuactor暴露的接口有可能被应用更改,
@@ -14,9 +25,9 @@ import org.springframework.cloud.client.ServiceInstance;
 @Slf4j
 public class AppInstanceHelper {
 
-    private static final String KEY_MANAGEMENT_PORT = "management.port";
+    private static final String KEY_MANAGEMENT_PORT = "management.server.port";
 
-    private static final String KEY_MANAGEMENT_PATH = "management.context-path";
+    private static final String KEY_MANAGEMENT_PATH = "management.server.servlet.context-path";
 
     private static final String KEY_REFRESH_PATH = "refresh.path";
 
@@ -36,6 +47,57 @@ public class AppInstanceHelper {
 
 
     /**
+     * 获取服务实例的refresh enpoint的URI
+     *
+     * @param instance
+     * @return
+     */
+    public static URI getRefreshUrl(ServiceInstance instance) {
+        String healthPath = instance.getMetadata().get(KEY_REFRESH_PATH);
+        if (StringUtils.isBlank(healthPath)) {
+            healthPath = DEFAULT_REFRESH_ENPOINT_PATH;
+        }
+
+        return UriComponentsBuilder.fromUri(getManagementUrl(instance)).path("/").path(healthPath).build().toUri();
+    }
+
+    /**
+     * 获取服务实例的management的uri (actuactor的根url)
+     *
+     * @param instance 服务实例
+     * @return
+     */
+    public static URI getManagementUrl(ServiceInstance instance) {
+        String managamentPath = instance.getMetadata().get(KEY_MANAGEMENT_PATH);
+        if (StringUtils.isBlank(managamentPath)) {
+            managamentPath = DEFAULT_MANAGEMENT_PATH;
+        }
+
+        URI serviceUrl = getServiceUrl(instance);
+        String managamentPort = instance.getMetadata().get(KEY_MANAGEMENT_PORT);
+        if (StringUtils.isBlank(managamentPort)) {
+            managamentPort = String.valueOf(serviceUrl.getPort());
+        }
+
+        return UriComponentsBuilder.fromUri(serviceUrl)
+                .port(managamentPort)
+                .path("/")
+                .path(managamentPath)
+                .build()
+                .toUri();
+    }
+
+    /**
+     * 获取服务实例的根uri
+     *
+     * @param instance 服务实例
+     * @return
+     */
+    public static URI getServiceUrl(ServiceInstance instance) {
+        return UriComponentsBuilder.fromUri(instance.getUri()).path("/").build().toUri();
+    }
+
+    /**
      * 根据服务实例，构建应用的相关信息
      *
      * @param appInfoVo
@@ -43,25 +105,25 @@ public class AppInstanceHelper {
      * @return
      */
     public static void fetchAppInfo(AppInfoVo appInfoVo, ServiceInstance instance) {
-//        String instanceUrl = instance.getUri().toString();
-//        // 尝试通过management相关接口获取应用信息
-//        URI uri = UriComponentsBuilder.fromHttpUrl(getManagementUrl(instance).toString()).pathSegment("info").build().toUri();
-//        try {
-//            Map<String, String> headers = new HashMap<>(1);
-//            headers.put(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-//
-//            String infoResp = HttpClientUtils.doGet(uri.toString(), null, headers, 3000);
-//            Map<String, Object> info = JacksonUtils.json2map(infoResp);
-//            if (info.containsKey(KEY_VERSION) && info.get(KEY_VERSION) != null) {
-//                appInfoVo.setVersion(info.get(KEY_VERSION).toString());
-//            }
-//            if (info.containsKey(KEY_DESCRIPTION) && info.get(KEY_DESCRIPTION) != null) {
-//                appInfoVo.setDescription(info.get(KEY_DESCRIPTION).toString());
-//            }
-//            appInfoVo.setInitialized(true);
-//        } catch (Exception e) {
-//            log.warn(">> 获取应用信息失败, app={}, uri={}, infoUrl={}", instance.getServiceId(), instanceUrl, uri.toString());
-//        }
+        String instanceUrl = instance.getUri().toString();
+        // 尝试通过management相关接口获取应用信息
+        URI uri = UriComponentsBuilder.fromHttpUrl(getManagementUrl(instance).toString()).pathSegment("info").build().toUri();
+        try {
+            Map<String, String> headers = Maps.newHashMapWithExpectedSize(1);
+            headers.put(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+
+            String infoResp = HttpClientUtils.doGet(uri.toString(), null, headers, 3000);
+            Map<String, Object> info = JacksonUtils.jsonToMap(infoResp);
+            if (info.containsKey(KEY_VERSION) && info.get(KEY_VERSION) != null) {
+                appInfoVo.setVersion(info.get(KEY_VERSION).toString());
+            }
+            if (info.containsKey(KEY_DESCRIPTION) && info.get(KEY_DESCRIPTION) != null) {
+                appInfoVo.setDescription(info.get(KEY_DESCRIPTION).toString());
+            }
+            appInfoVo.setInitialized(true);
+        } catch (Exception e) {
+            log.warn(">> 获取应用信息失败, app={}, uri={}, infoUrl={}", instance.getServiceId(), instanceUrl, uri.toString());
+        }
     }
 
 

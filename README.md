@@ -3,12 +3,20 @@
 ```
 DoydCloud
     |-- doyd-eureka-server: 服务注册和发现中心
+    |-- doyd-secheduled-task: 调度任务微服务（quartz2.3.1）
     |-- config: 
     |   |-- doyd-configserver-server: 配置中心服务,同时提供yaml配置API
     |   |-- config-repo: 配置文件仓库
     |   |-- config-backup: 配置历史文件仓库
     |-- auth: 登录认证服务
+    |   |-- platfrom-admin-auth: 平台后台认证服务
+    |   |-- special-merchant-auth: 特约商家认证服务
+    |   |-- doyd-admin-auth: doyd后台管理认证服务
     |-- gateway: 服务网关
+    |   |-- platfrom-admin-gateway: 平台后台网关
+    |   |-- special-merchant-gateway: 特约商家网关(pc+applet)
+    |   |-- doyd-admin-gateway: doyd后台管理网关
+    |-- microservice: 业务拆分各个微服务
     |-- monitor: 服务监控
     |   |-- doyd-hystrix-dashboard: 熔断器的监控面板
     |   |-- doyd-zipkin-server: 调用链跟踪

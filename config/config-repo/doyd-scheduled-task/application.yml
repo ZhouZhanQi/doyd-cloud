@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://39.100.105.67:3306/quartz?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: 825116
+    type: com.zaxxer.hikari.HikariDataSource
