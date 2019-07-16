@@ -21,8 +21,7 @@ DoydCloud
     |   |-- doyd-hystrix-dashboard: 熔断器的监控面板
     |   |-- doyd-zipkin-server: 调用链跟踪
     |   |-- doyd-boot-admin: 微服务健康监控(升级到2.1.4之后删除hystrix ui turbine ui)
-    |-- tcc: 待开发 （柔性事务）https://github.com/prontera/spring-cloud-rest-tcc 
-    |-- |-- 暂时暂停开发（tcc与业务耦合比较大 需要结合业务开发 待商榷）
+    |-- tcc: 基于rabbitmq的分布式事务解决方案（最终一致性）
     |-- |-- doyd-event-driven: 事件驱动
     |-- |-- doyd-tcc-coordinator: tcc协调器
     |-- scripts: 项目所用到的各种脚本(数据库sql脚本等)

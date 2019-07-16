@@ -112,7 +112,7 @@ eureka:
     prefer-ip-address: true
     #    ip-address: 127.0.0.1
     ip-address: 192.168.4.110
-    #    ip-address: 192.168.100.4
+    #    ip-address: 192.168.4.110
     instance-id: ${eureka.instance.ip-address}:${server.port}
     metadata-map:
       management:

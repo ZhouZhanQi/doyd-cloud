@@ -130,8 +130,7 @@ public class JacksonUtils {
     public static <T> T jsonToList(String jsonStr, Class<T> collectionClass, Class<?>... elementClasses) {
         try {
             JavaType javaType = OBJECT_MAPPER.getTypeFactory().constructParametricType(collectionClass, elementClasses);
-            T ls = OBJECT_MAPPER.readValue(jsonStr, javaType);
-            return ls;
+            return OBJECT_MAPPER.readValue(jsonStr, javaType);
         } catch (IOException e) {
             throw new RuntimeException("error transform to ObjList", e);
         }

@@ -1,11 +1,12 @@
 package com.doyd.configserver.client;
 
 import com.doyd.configserver.config.FeginClientConfig;
-import com.doyd.configserver.vo.bootadmin.BootAdminAppVo;
+import com.doyd.configserver.vo.bootadmin.BootAdminApplication;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * @author zhouzq
@@ -20,7 +21,14 @@ public interface BootAdminApiClient {
      *
      * @return
      */
-    @GetMapping("/api/applications")
-    List<BootAdminAppVo> listApps();
+    @GetMapping(value = "/applications", produces = MediaType.APPLICATION_JSON_VALUE)
+    String listApps();
 
+    /**
+     * 获取某个服务实例信息
+     * @param name
+     * @return
+     */
+    @GetMapping(value = "/applications/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<BootAdminApplication> getApplicationInfoByAppName(@PathVariable("name") String name);
 }

@@ -1,19 +1,31 @@
 package com.doyd.configserver.service.impl;
 
 import com.doyd.configserver.client.BootAdminApiClient;
+import com.doyd.configserver.helper.AppInstanceHelper;
+import com.doyd.configserver.helper.YmlFileHelper;
 import com.doyd.configserver.service.IYmlConfigService;
 import com.doyd.configserver.vo.AppInfoVo;
-import com.doyd.configserver.vo.bootadmin.BootAdminAppVo;
+import com.doyd.configserver.vo.bootadmin.BootAdminApplication;
+import com.doyd.configserver.vo.bootadmin.Endpoint;
+import com.doyd.configserver.vo.bootadmin.Instance;
+import com.doyd.core.exceptions.BusinessException;
+import com.doyd.core.util.JacksonUtils;
+import com.doyd.core.util.http.HttpClientUtils;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.netflix.appinfo.InstanceInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -21,22 +33,24 @@ import java.util.stream.Collectors;
  * @date 2019/7/2
  * @desc yml配置文件服务实现类
  */
+@Slf4j
 @Service
 public class YmlConfigServiceImpl implements IYmlConfigService {
 
     //忽略的展示配置文件
-    private static final String[] IGNORED_SERVICES = {"doyd-eureka-server", "doyd-config-server", "doyd-hystrix-dashboard"};
+    private static final List<String> IGNORED_SERVICES =
+            Lists.newArrayList("doyd-eureka-server", "doyd-config-server", "doyd-hystrix-dashboard");
 
     @Value("${doyd.yml.repo-dir:./config-repo}")
     private String repoLocation;
+
     @Value("${doyd.yml.backup-dir:./backup-repo}")
     private String backupLocation;
 
-    @Autowired
-    private final DiscoveryClient discoveryClient;
 
-    @Autowired
-    private final BootAdminApiClient bootAdminApiClient;
+    private final  DiscoveryClient discoveryClient;
+
+    private  final BootAdminApiClient bootAdminApiClient;
 
     @Autowired
     public YmlConfigServiceImpl(DiscoveryClient discoveryClient, BootAdminApiClient bootAdminApiClient) {
@@ -47,58 +61,79 @@ public class YmlConfigServiceImpl implements IYmlConfigService {
     @Override
     public List<AppInfoVo> listAppInfo() {
         List<AppInfoVo> result = Lists.newArrayList();
-
+        //查询注册在注册中心的微服务
         List<String> services = discoveryClient.getServices();
-        if (Objects.isNull(services)) {
+        if (Objects.isNull(services) || services.isEmpty()) {
             return result;
         }
 
-        if (!services.isEmpty()) {
-            // 过滤掉要忽略的应用(不可配置的应用)
-            services = services.stream().filter(appid -> {
-                for (String ignoredId : IGNORED_SERVICES) {
-                    if (ignoredId.equals(appid)) {
-                        return false;
-                    }
-                }
-                return true;
-            }).sorted().collect(Collectors.toList());
+        services = services.stream().filter(appId -> !IGNORED_SERVICES.contains(appId)).sorted().collect(Collectors.toList());
 
+        List<BootAdminApplication> applications = JacksonUtils.jsonToList(bootAdminApiClient.listApps(), List.class, BootAdminApplication.class);
+
+        if (Objects.nonNull(applications) && !applications.isEmpty()) {
             // 获取应用的实例信息
-            List<BootAdminAppVo> instances = bootAdminApiClient.listApps();
             for (String serviceId : services) {
-                result.add(getAppInfo(serviceId, instances));
+                applications.stream().filter(application -> serviceId.equalsIgnoreCase(application.getName())).findFirst()
+                        .ifPresent( appInfo -> result.add(getAppInfo(appInfo)));
             }
         }
+
         return result;
     }
 
+    @Override
+    public String getYamlContent(String application) {
+        Preconditions.checkArgument(StringUtils.isNotBlank(application), "application name not blank");
+        return YmlFileHelper.getYamlContent(repoLocation, application);
+    }
 
-    private AppInfoVo getAppInfo(String serviceId, List<BootAdminAppVo> instances) {
+    @Override
+    public void editYamlContent(String application, String content) {
+        Preconditions.checkArgument(StringUtils.isNotBlank(application), "application name not blank");
+        Preconditions.checkArgument(StringUtils.isNotBlank(content), "application config content not blank");
+        YmlFileHelper.saveYamlFile(repoLocation, backupLocation, application, content);
+        postRefreshCommand(application);
+    }
+
+
+    private AppInfoVo getAppInfo(BootAdminApplication application) {
         // 找到第一个实例
         AppInfoVo appInfoVo = new AppInfoVo();
-        appInfoVo.setName(serviceId);
-
+        appInfoVo.setName(application.getName().toLowerCase());
         List<String> urls = Lists.newArrayList();
-        if (instances != null && !instances.isEmpty()) {
-            String version = null;
-            String description = null;
-            for (BootAdminAppVo instance : instances) {
-                if (serviceId.equalsIgnoreCase(instance.getName())) {
-                    if (StringUtils.isBlank(version)) {
-                        version = instance.getInfoVersion();
-                    }
-                    if (StringUtils.isBlank(description)) {
-                        description = instance.getInfoDescription();
-                    }
-                    urls.add(instance.getServiceUrl());
-                }
-            }
-            appInfoVo.setDescription(description);
-            appInfoVo.setVersion(version);
-        }
+
+        application.getInstances().forEach( instance -> {
+            urls.add(instance.getRegistration().getServiceUrl());
+            appInfoVo.setVersion(String.valueOf(instance.getVersion()));
+            appInfoVo.setDescription(instance.getInfo().getDescription());
+        });
+
         appInfoVo.setUrls(urls);
         return appInfoVo;
+    }
+
+
+    //推送yml配置文件的修改到各个服务
+    private void postRefreshCommand(String applicationName) {
+
+        log.debug("<< {} config push start", applicationName);
+
+        ResponseEntity<BootAdminApplication> applicationInfo = bootAdminApiClient.getApplicationInfoByAppName(applicationName);
+        Preconditions.checkArgument(HttpStatus.OK.equals(applicationInfo.getStatusCode()), applicationName + "应用信息查询失败");
+
+        BootAdminApplication application = applicationInfo.getBody();
+
+        //查询/bus/refresh 并推送
+        for (Instance instance : application.getInstances()) {
+            Optional<Endpoint> busRefreshOpt = instance.getEndpoints().stream().filter(endpoint -> endpoint.getId().equals("bus-refresh")).findFirst();
+            String pushUrl = busRefreshOpt.orElseThrow(BusinessException::new).getUrl();
+            HttpClientUtils.doPost(pushUrl);
+
+            log.debug(">> {}, yml 配置更新成功", applicationName);
+        }
+
+        log.debug("<< {} config push end", applicationInfo);
     }
 
 }

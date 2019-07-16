@@ -17,4 +17,17 @@ public interface IYmlConfigService {
      */
     List<AppInfoVo> listAppInfo();
 
+    /**
+     * 获取应用的yaml配置内容
+     * @param applicaiton 服务ID(对应spring.application.name)
+     * @return
+     */
+    String getYamlContent(String applicaiton);
+
+    /**
+     * 编辑修改yml配置内容
+     * @param application 服务Id
+     * @param content 内容
+     */
+    void editYamlContent(String application, String content);
 }

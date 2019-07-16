@@ -1,5 +1,6 @@
 package com.doyd.configserver.config;
 
+import com.doyd.configserver.helper.ByteArrayDecoder;
 import feign.Logger;
 import feign.auth.BasicAuthRequestInterceptor;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -16,4 +17,16 @@ public class FeginClientConfig {
     public Logger.Level feiginLogger(){
         return Logger.Level.FULL;
     }
+
+    @Bean
+    public BasicAuthRequestInterceptor basicAuth() {
+        return new BasicAuthRequestInterceptor("zhouzq", "825116");
+    }
+
+    @Bean
+    public ByteArrayDecoder decoder() {
+        return new ByteArrayDecoder();
+    }
+
+
 }

@@ -1,5 +1,6 @@
 info:
   description: 微服务健康和日志监控
+  version: 1.0.0
 server:
   port: 7020
 spring:
@@ -10,6 +11,7 @@ spring:
       discovery:
         enabled: true
         service-id: doyd-configserver-server
+      profile: default
     loadbalancer:
       retry:
         enabled: false
@@ -35,7 +37,7 @@ management:
 eureka:
   instance:
     prefer-ip-address: true
-    ip-address: 192.168.100.4
+    ip-address: 192.168.4.110
 #    ip-address: 192.168.4.110
     instance-id: ${eureka.instance.ip-address}:${server.port}
     metadata-map:
