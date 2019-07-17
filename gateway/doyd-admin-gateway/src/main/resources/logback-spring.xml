@@ -5,7 +5,7 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <property name="default_log_path" value="/doyd-cloud/logs" />
     <property name="LOG_PATH" value="${LOG_PATH:-${default_log_path}}"/>
-    <property name="LOG_FILE" value="${LOG_FILE:-doyd-config-server}"/>
+    <property name="LOG_FILE" value="${LOG_FILE:-doyd-admin-gateway}"/>
 
     <!-- the name of the application's logging context -->
     <!-- by default each JMXConfigurator instance will be registered under the same name in the same JVM -->

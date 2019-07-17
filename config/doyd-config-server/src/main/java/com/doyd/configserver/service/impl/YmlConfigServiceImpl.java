@@ -122,7 +122,11 @@ public class YmlConfigServiceImpl implements IYmlConfigService {
 
         application.getInstances().forEach( instance -> {
             urls.add(instance.getRegistration().getServiceUrl());
-            appInfoVo.setVersion(String.valueOf(instance.getVersion()));
+
+            if (Objects.nonNull(instance.getBuildVersion())) {
+                appInfoVo.setVersion(instance.getBuildVersion().getValue());
+            }
+
             appInfoVo.setDescription(instance.getInfo().getDescription());
         });
 
