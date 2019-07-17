@@ -9,7 +9,7 @@ spring:
     config:
       discovery:
         enabled: true
-        service-id: doyd-configserver-server
+        service-id: doyd-config-server
     loadbalancer:
       retry:
         enabled: false
@@ -30,18 +30,16 @@ management:
     logfile:
       external-file: /doyd-cloud/logs/doyd-hystrix-dashboard.log
 turbine:
-  app-config: doyd-configserver-server
+  app-config: doyd-config-server
   aggregator:
-    cluster-config: DOYD-CONFIGSERVER-SERVER
+    cluster-config: DOYD-CONFIG-SERVER
   cluster-name-expression: metadata['turbine-cluster']
   combine-host-port: true
   instanceUrlSuffix:
-    DOYD-CONFIGSERVER-SERVER: '/86120d49-edb6-4a6a-ae93-f4ac7b12a1e8/hystrix.stream'
+    DOYD-CONFIG-SERVER: '/86120d49-edb6-4a6a-ae93-f4ac7b12a1e8/hystrix.stream'
 eureka:
   instance:
     prefer-ip-address: true
-    #    ip-address: 127.0.0.1
-#    ip-address: 192.168.3.37
     ip-address: 192.168.3.37
     instance-id: ${eureka.instance.ip-address}:${server.port}
     metadata-map:

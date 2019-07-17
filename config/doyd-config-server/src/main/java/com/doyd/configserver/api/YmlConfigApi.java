@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Api(value = "YamlConfigApi", tags = {"yaml文件配置API"})
 @RestController
-@RequestMapping(value = "/admin/ymlconfig", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/config-server/admin/ymlconfig", produces = MediaType.APPLICATION_JSON_VALUE)
 public class YmlConfigApi {
 
     @Autowired

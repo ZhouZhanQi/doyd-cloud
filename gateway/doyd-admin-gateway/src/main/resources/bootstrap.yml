@@ -10,11 +10,10 @@ spring:
       discovery:
         service-id: doyd-config-server
         enabled: true
+    loadbalancer:
+      retry:
+        enabled: false
 management:
-  server:
-    servlet:
-      context-path: '/92908134-9466-4586-ac4a-750211b09fc8'
-    port: 50610
   endpoints:
     web:
       exposure:
@@ -32,8 +31,7 @@ eureka:
     instance-id: ${eureka.instance.ip-address}:${server.port}
     metadata-map:
       management:
-        port: ${management.server.port}
-        context-path: ${management.server.servlet.context-path}/actuator
+        context-path: /actuator
   client:
     # 客户端从Eureka Server集群里更新Eureka Server信息的频率
     eureka-service-url-poll-interval-seconds: 60
