@@ -1,7 +1,6 @@
 package com.doyd.configserver.service.impl;
 
 import com.doyd.configserver.client.BootAdminApiClient;
-import com.doyd.configserver.helper.AppInstanceHelper;
 import com.doyd.configserver.helper.YmlFileHelper;
 import com.doyd.configserver.service.IYmlConfigService;
 import com.doyd.configserver.vo.AppInfoVo;
@@ -13,19 +12,18 @@ import com.doyd.core.util.JacksonUtils;
 import com.doyd.core.util.http.HttpClientUtils;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.netflix.appinfo.InstanceInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -96,9 +94,28 @@ public class YmlConfigServiceImpl implements IYmlConfigService {
         postRefreshCommand(application);
     }
 
+    @Override
+    public List<String> listYamlHistory(String application) {
+        Preconditions.checkArgument(StringUtils.isNotBlank(application), "application name not blank");
+        return YmlFileHelper.listHistoryVersion(backupLocation, application);
+    }
+
+    @Override
+    public String getYamlHistoryContent(String application, String version) {
+        Preconditions.checkArgument(StringUtils.isNotBlank(application), "application name not blank");
+        Preconditions.checkArgument(StringUtils.isNotBlank(version), "application history version not blank");
+        return YmlFileHelper.getHistoryContent(backupLocation, application, version);
+    }
+
+    @Override
+    public void rollbackAppConfig(String application, String version) {
+        Preconditions.checkArgument(StringUtils.isNotBlank(application), "application name not blank");
+        Preconditions.checkArgument(StringUtils.isNotBlank(version), "application history version not blank");
+        YmlFileHelper.rollback2version(repoLocation, backupLocation, application, version);
+    }
+
 
     private AppInfoVo getAppInfo(BootAdminApplication application) {
-        // 找到第一个实例
         AppInfoVo appInfoVo = new AppInfoVo();
         appInfoVo.setName(application.getName().toLowerCase());
         List<String> urls = Lists.newArrayList();
@@ -133,7 +150,7 @@ public class YmlConfigServiceImpl implements IYmlConfigService {
             log.debug(">> {}, yml 配置更新成功", applicationName);
         }
 
-        log.debug("<< {} config push end", applicationInfo);
+        log.debug("<< {} config push end", applicationName);
     }
 
 }

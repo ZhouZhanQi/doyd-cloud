@@ -10,8 +10,7 @@ spring:
     config:
       discovery:
         enabled: true
-        service-id: doyd-configserver-server
-      profile: default
+        service-id: doyd-config-server
     loadbalancer:
       retry:
         enabled: false
@@ -37,8 +36,8 @@ management:
 eureka:
   instance:
     prefer-ip-address: true
-    ip-address: 192.168.4.110
-#    ip-address: 192.168.4.110
+    ip-address: 192.168.3.37
+#    ip-address: 192.168.3.37
     instance-id: ${eureka.instance.ip-address}:${server.port}
     metadata-map:
       management:

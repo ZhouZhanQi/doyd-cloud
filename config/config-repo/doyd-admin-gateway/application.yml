@@ -4,12 +4,18 @@ spring:
     port: 5672
     username: guest
     password: guest
+  zipkin:
+    base-url: http://doyd-zipkin-server/zipkin
+    zipkin:
+      rabbitmq:
+        queue: zipkin
+      message-timeout: 3
   cloud:
     gateway:
       routes:
-        - id:
-          uri: lb://serviceId
+        - id: config_server
+          uri: lb://doyd-config-server
           predicates:
-            - Path=/demo/**
+            - Path=/config-server/admin/**
     discovery:
       enabled: true
