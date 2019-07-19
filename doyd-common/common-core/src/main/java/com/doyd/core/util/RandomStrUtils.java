@@ -15,13 +15,17 @@ import java.util.stream.IntStream;
  * @desc 随机字符串工具类
  */
 @Slf4j
-public class RandomStrUtils {
+public final class RandomStrUtils {
 
     private static final String ALPHABETIC_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private static final String NUMERIC_CHARS = "0123456789";
 
     private static final String DEFAULT_CHARS = ALPHABETIC_CHARS + NUMERIC_CHARS;
+
+
+    private RandomStrUtils() {
+    }
 
     /** An instance of secure random to ensure randomness is secure. */
     private static final SecureRandom RANDOMIZER = SecureRandomUtils.getNativeInstance();

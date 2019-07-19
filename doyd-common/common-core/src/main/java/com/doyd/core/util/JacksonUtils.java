@@ -16,7 +16,7 @@ import java.util.Map;
  * @create 2019/3/20
  */
 @Slf4j
-public class JacksonUtils {
+public final class JacksonUtils {
 
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -29,6 +29,8 @@ public class JacksonUtils {
         OBJECT_MAPPER.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
 
+    private JacksonUtils() {
+    }
 
     /**
      * 仅读取整个json中的某个属性值,若该属性是一个json对象,则返回空字符串""

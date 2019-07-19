@@ -1,5 +1,6 @@
 package com.doyd.core.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,9 +13,13 @@ import java.security.SecureRandom;
  * @author zhouzq
  * @date 2018-05-28
  */
-public class SecureRandomUtils {
+@Slf4j
+public final class SecureRandomUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(SecureRandomUtils.class);
+    private SecureRandomUtils() {
+
+    }
+
 
     /**
      * Get strong enough SecureRandom instance and of the checked exception.

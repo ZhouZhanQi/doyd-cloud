@@ -24,6 +24,7 @@
         <module>doyd-common/common-dps</module>
         <module>doyd-common/common-db</module>
         <module>gateway/doyd-admin-gateway</module>
+        <module>doyd-common/common-handshake</module>
     </modules>
 
     <properties>

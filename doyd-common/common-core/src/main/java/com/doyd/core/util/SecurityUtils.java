@@ -263,42 +263,11 @@ public class SecurityUtils {
         } catch (UnsupportedEncodingException e) {
             return Optional.empty();
         }
-        int stringLen = string.length();
-
-        List<Integer> rndkey = new ArrayList<Integer>();
-        StringBuffer result = new StringBuffer();
-        Integer[] box = new Integer[256];
-        for (int i = 0; i < box.length; i++) {
-            box[i] = i;
-        }
-
-        for (int i = 0; i <= 255; i++) {
-            rndkey.add((int) cryptkey.charAt(i % cryptkeyLen));
-        }
-
-        for (int j = 0, i = 0; i < 256; i++) {
-            j = (j + box[i] + rndkey.get(i)) % 256;
-            int tmp = box[i];
-            box[i] = box[j];
-            box[j] = tmp;
-        }
-
-        for (int k = 0, j = 0, i = 0; i < stringLen; i++) {
-            k = (k + 1) % 256;
-            j = (j + box[k]) % 256;
-            int tmp = box[k];
-            box[k] = box[j];
-            box[j] = tmp;
-            int a = (int) string.charAt(i);
-            int b = box[(box[k] + box[j]) % 256];
-            char r = (char) (a ^ b);
-            result.append(r);
-        }
+        StringBuffer result = authCodeEncryptionProcess(string, cryptkey, cryptkeyLen);
 
         String secString = result.toString();
         String substringBegin = secString.substring(0, 10);
-        if (((substringBegin == null ? -1 : Integer.parseInt(substringBegin)) == 0 || (substringBegin == null ? 0 : Integer.parseInt(substringBegin)) - System.currentTimeMillis() / 1000 > 0)
-                && secString.substring(10, 26).equals((md5Encrypt(secString.substring(26) + keybOptional.get())).orElseThrow(IllegalStateException::new).substring(0, 16))) {
+        if ((Integer.parseInt(substringBegin) == 0 || Integer.parseInt(substringBegin) - System.currentTimeMillis() / 1000 > 0) && secString.substring(10, 26).equals(md5Encrypt(secString.substring(26) + keybOptional.get()).orElseThrow(IllegalStateException::new).substring(0, 16))) {
             return Optional.of(secString.substring(26));
         } else {
             return Optional.empty();
@@ -335,7 +304,6 @@ public class SecurityUtils {
         String keyc = ckey_length > 0 ? md5Encrypt(String.valueOf(System.currentTimeMillis() / 1000)).orElseThrow(IllegalStateException::new).substring((32 - ckey_length)) : "";
 
         Preconditions.checkArgument(keyaOptional.isPresent() && keybOptional.isPresent(), "keya md5 error or keyb md5 error");
-
         Optional<String> keyacOptional = md5Encrypt(keyaOptional.get() + keyc);
         Preconditions.checkArgument(keyacOptional.isPresent(), "keya+keyc md5 error");
         String cryptkey = keyaOptional.get() + keyacOptional.get();
@@ -344,9 +312,23 @@ public class SecurityUtils {
 
         //sprintf('%010d', $expiry ? $expiry + time() : 0).substr(md5($string.$keyb), 0, 16).$string
         string = String.format("%010d", expiry > 0 ? expiry + System.currentTimeMillis() / 1000 : 0) + md5Encrypt(string + keybOptional.get()).orElseThrow(IllegalStateException::new).substring(0, 16) + string;
+
+        StringBuffer result = authCodeEncryptionProcess(string, cryptkey, cryptkeyLen);
+
+
+        byte[] bytes;
+        try {
+            bytes = result.toString().getBytes(CHARSET_NAME);
+            return Optional.of(keyc + Base64.getEncoder().encodeToString(bytes));
+        } catch (UnsupportedEncodingException e) {
+            return Optional.empty();
+        }
+    }
+
+    private static StringBuffer authCodeEncryptionProcess(String string, String cryptkey, int cryptkeyLen) {
         int stringLen = string.length();
 
-        List<Integer> rndkey = new ArrayList<Integer>();
+        List<Integer> rndkey = new ArrayList<>();
         StringBuffer result = new StringBuffer();
         Integer[] box = new Integer[256];
         for (int i = 0; i < box.length; i++) {
@@ -376,14 +358,7 @@ public class SecurityUtils {
             result.append(r);
         }
 
-
-        byte[] bytes;
-        try {
-            bytes = result.toString().getBytes(CHARSET_NAME);
-            return Optional.of(keyc + Base64.getEncoder().encodeToString(bytes));
-        } catch (UnsupportedEncodingException e) {
-            return Optional.empty();
-        }
+        return result;
     }
 
 

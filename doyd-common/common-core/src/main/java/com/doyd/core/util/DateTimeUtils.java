@@ -23,13 +23,16 @@ import java.util.List;
  * @create 2019/3/20
  */
 @Slf4j
-public class DateTimeUtils {
+public final class DateTimeUtils {
 
     public final static String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public final static String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
     public final static String DEFAULT_DAY_FORMAT = "yyyyMMdd";
+
+    private DateTimeUtils() {
+    }
 
     /**
      * 将date类型日期转换为localdatetime
@@ -49,6 +52,11 @@ public class DateTimeUtils {
         return Date.from(time.atZone(ZoneId.systemDefault()).toInstant());
     }
 
+    /**
+     * 时间戳转换为日期
+     * @param timestamp
+     * @return
+     */
     public static LocalDateTime getDateTimeOfTimestamp(long timestamp) {
         Instant instant = Instant.ofEpochMilli(timestamp);
         ZoneId zone = ZoneId.systemDefault();
@@ -324,36 +332,5 @@ public class DateTimeUtils {
         Assert.notNull(time, "time is null");
         DateTimeFormatter ftf = DateTimeFormatter.ofPattern(format);
         return ftf.format(LocalDateTime.ofInstant(Instant.ofEpochMilli(time),ZoneId.systemDefault()));
-    }
-
-
-
-    /**
-     * Description:获取自定义时间字符串 //x分钟前/x小时前
-     * @return:java.lang.String
-     * Author:周涛
-     * Date Created in 2019/6/10 11:35
-     */
-    public static String getDefaultTimeStr(long timestamp){
-        long diffTimestamp=getTimestampOfDateTime(LocalDateTime.now())-timestamp;
-        if(diffTimestamp<60*1000){
-            return 1+Math.round(Math.ceil(diffTimestamp/(1000)))+"秒前";
-        }else if(60*1000<=diffTimestamp&&diffTimestamp<=60*60*1000){
-           return Math.round(Math.ceil(diffTimestamp/(60*1000)))+"分钟前";
-        }else if(60*60*1000<diffTimestamp&&diffTimestamp<=24*60*60*1000){
-            return  Math.round(Math.ceil(diffTimestamp/(60*60*1000)))+"小时前";
-        }else {
-            return  Math.round(Math.ceil(diffTimestamp/(24*60*60*1000)))+"天前";
-        }
-    }
-    /**
-     * Description:获取今天是星期几
-     * @return:java.lang.Integer
-     * Author:周涛
-     * Date Created in 2019/6/10 15:44
-     */
-    public static Integer getWeekDay(){
-        LocalDateTime ldt = LocalDateTime.now();
-        return ldt.get(WeekFields.of(DayOfWeek.of(1), 1).dayOfWeek());
     }
 }
