@@ -55,6 +55,11 @@ public class DateTimeUtils {
         return LocalDateTime.ofInstant(instant, zone);
     }
 
+    /**
+     * 获取时间戳
+     * @param localDateTime 当前时间
+     * @return
+     */
     public static long getTimestampOfDateTime(LocalDateTime localDateTime) {
         ZoneId zone = ZoneId.systemDefault();
         Instant instant = localDateTime.atZone(zone).toInstant();
@@ -91,10 +96,21 @@ public class DateTimeUtils {
         return LocalDate.parse(dateStr, formatter);
     }
 
+    /**
+     * 将日期转换为 yyyy-MM-dd 默认日期格式
+     * @param localDate
+     * @return
+     */
     public static String convertLocalDateDefaultStr(LocalDate localDate){
         return convertLocalDateToStr(localDate, DEFAULT_DATE_FORMAT);
     }
 
+    /**
+     * 将日期转换为指定格式
+     * @param localDate
+     * @param format
+     * @return
+     */
     public static String convertLocalDateToStr(LocalDate localDate, String format){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         return localDate.format(formatter);
@@ -111,11 +127,22 @@ public class DateTimeUtils {
     }
 
 
+    /**
+     * 将日期转换为默认格式 yyyy-MM-dd HH:mm:ss
+     * @param dateTime
+     * @return
+     */
     public static String convertLocalDateTimeToDefaultStr(LocalDateTime dateTime){
         return convertLocalDateTimeToStr(dateTime, DEFAULT_DATE_TIME_FORMAT);
     }
 
 
+    /**
+     * 将日期转换为指定格式
+     * @param dateTime
+     * @param formatterStr
+     * @return
+     */
     public static String convertLocalDateTimeToStr(LocalDateTime dateTime, String formatterStr){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatterStr);
         return dateTime.format(formatter);
